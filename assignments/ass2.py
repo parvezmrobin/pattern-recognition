@@ -1,11 +1,9 @@
-from functools import total_ordering
 from math import inf
 from queue import PriorityQueue
 
 true, false, null = True, False, None
 
 
-@total_ordering
 class Point:
     def __init__(self, x, y):
         self.x, self.y = x, y
@@ -29,16 +27,29 @@ class Point:
         return "({}, {})".format(self.x, self.y)
 
     def __eq__(self, other):
-        return self.slope_to(other) == 0
+        return self.slope_to(Point.CENTER) == other.slope_to(Point.CENTER)
 
     def __ne__(self, other):
-        return self.slope_to(other) != 0
+        return self.slope_to(Point.CENTER) != other.slope_to(Point.CENTER)
 
     def __le__(self, other):
-        return self.slope_to(other) <= 0
+        return self.slope_to(Point.CENTER) <= other.slope_to(Point.CENTER)
+
+    def __lt__(self, other):
+        return self.slope_to(Point.CENTER) < other.slope_to(Point.CENTER)
+
+    def __ge__(self, other):
+        return self.slope_to(Point.CENTER) >= other.slope_to(Point.CENTER)
+
+    def __gt__(self, other):
+        return self.slope_to(Point.CENTER) > other.slope_to(Point.CENTER)
+
+
+Point.CENTER = Point(0, 0)
 
 
 def get_lines_by_sorting(points):
+    # Ensure call by value
     points = points[:]  # type: list
     lines = []
 
@@ -64,8 +75,11 @@ def get_lines_by_sorting(points):
 
 def remove_subsets(lines):
     length = len(lines)
-    lines = [sorted(line) for line in lines]
+    _lines = []
+    for line in lines:
+        _lines.append(sorted(line))
     mask = [true] * length
+    lines = _lines
 
     for i in range(length):
         if mask[i]:
