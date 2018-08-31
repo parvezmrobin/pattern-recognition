@@ -1,6 +1,8 @@
 from math import inf
 from queue import PriorityQueue
 
+from matplotlib.pyplot import plot, show, text
+
 true, false, null = True, False, None
 
 
@@ -8,11 +10,13 @@ class Point:
     def __init__(self, x, y):
         self.x, self.y = x, y
 
-    def draw(self):
-        pass
+    def draw(self, color='b', show_text=false, offset=(0, 0)):
+        plot(self.x, self.y, color + 'o')
+        if show_text:
+            text(self.x + offset[0], self.y + offset[1], self, fontsize=6)
 
-    def draw_to(self):
-        pass
+    def draw_to(self, other, color='r'):
+        plot([self.x, other.x], [self.y, other.y], color + '-')
 
     def slope_to(self, other):
         del_y = other.y - self.y
@@ -44,6 +48,9 @@ class Point:
     def __gt__(self, other):
         return self.slope_to(Point.CENTER) > other.slope_to(Point.CENTER)
 
+    def __del__(self):
+        show()
+
 
 Point.CENTER = Point(0, 0)
 
@@ -74,7 +81,6 @@ def get_lines_by_sorting(points):
 
 
 def is_line(line):
-
     p0, p1, p2, p3 = line  # type: Point
     if p0.slope_to(p1) == p0.slope_to(p2) == p0.slope_to(p3):
         return true
@@ -114,14 +120,22 @@ def remove_subsets(lines):
 
 
 def main():
-    points = [(19000, 10000), (18000, 10000), (32000, 10000), (21000, 10000), (1234, 5678), (14000, 10000), ]
+    points = [(19000, 10000), (18000, 10000), (32000, 10000), (21000, 10000), (12340, 5678), (14000, 10000), ]
     # points = [(10000, 0), (0, 10000), (3000, 7000), (7000, 3000), (20000, 21000), (3000, 4000), (14000, 15000),
     #           (6000, 7000), ]
     points = [Point(*point) for point in points]
     lines = get_lines_by_backtracking(points)
     lines = remove_subsets(lines)
+
+    for point in points:
+        point.draw(show_text=true, offset=(0, -200))
+
     for line in lines:
+        for i, point in enumerate(line):
+            if i > 0:
+                point.draw_to(line[i - 1])
         print(*line, sep=' -> ')
+    show()
 
 
 main()
