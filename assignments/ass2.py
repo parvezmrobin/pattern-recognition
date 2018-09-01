@@ -8,7 +8,7 @@ true, false, null = True, False, None
 
 class Point:
     def __init__(self, x, y):
-        self.x, self.y = x, y
+        self.x, self.y = int(x), int(y)
 
     def draw(self, color='b', show_text=false, offset=(0, 0)):
         plot(self.x, self.y, color + 'o')
@@ -120,15 +120,18 @@ def remove_subsets(lines):
 
 
 def main():
-    points = [(19000, 10000), (18000, 10000), (32000, 10000), (21000, 10000), (12340, 5678), (14000, 10000), ]
-    # points = [(10000, 0), (0, 10000), (3000, 7000), (7000, 3000), (20000, 21000), (3000, 4000), (14000, 15000),
-    #           (6000, 7000), ]
-    points = [Point(*point) for point in points]
-    lines = get_lines_by_backtracking(points)
+    with open('../input/assignment2/input8.txt') as file:
+        n = int(file.readline())
+        points = []
+        for i in range(n):
+            x, y = file.readline().split()
+            points.append(Point(x, y))
+
+    lines = get_lines_by_sorting(points)
     lines = remove_subsets(lines)
 
     for point in points:
-        point.draw(show_text=true, offset=(0, -200))
+        point.draw(show_text=true, offset=(300, -100))
 
     for line in lines:
         for i, point in enumerate(line):
