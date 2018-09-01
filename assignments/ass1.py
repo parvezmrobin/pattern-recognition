@@ -1,3 +1,11 @@
+"""
+Given a list of numbers A and B
+the assignment is to find a threshold t
+such that A lies on the one side of t
+and B lies on the other side, and t
+minimizes the number of mis-classifications.
+"""
+
 from colorama import Fore
 
 true, false, null = True, False, None
@@ -9,6 +17,8 @@ def main():
     A = [1.3, -.5, 2.3, 5.1, 8.2, -.4, 10.5, 2.5, -4.2, -3.1, 1.7, 2.8, 4.6, 3.0, 10.1, 2.5, .8, 8.1, 2.7, -6.5, ]
     B = [-2.7, -3.2, -5.4, -10.8, -1.1, -3.4, .7, -5.0, -7.1, -10.0, .9, 1.2, -4.9, -6.2, 1.3, -1.9, -8.7, -7.4, .9,
          -10.3, ]
+    # X is the set of probable dividers
+    # This can be any value from A or B
     X = set(A + B)
 
     min_divider, max_divider = null, null
@@ -20,9 +30,13 @@ def main():
     Data = A_with_class + B_with_class
     for thresh in X:
         mis_calculate = []
-        for x in Data:
-            if (x[0] > thresh and x[1] == 'A') or (x[0] <= thresh and x[1] == 'B'):
-                mis_calculate.append(x)
+        for val, cls in Data:
+            # We assume, A is in lower side of thresh
+            # and B is in the upper side
+            # If any value doesn't follow this,
+            # count it as mis-classification
+            if (val > thresh and cls == 'A') or (val <= thresh and cls == 'B'):
+                mis_calculate.append((val, cls))
 
         if len(mis_calculate) < len(min_mis_calc):
             min_mis_calc = mis_calculate
@@ -31,6 +45,8 @@ def main():
             max_mis_calc = mis_calculate
             max_divider = thresh
 
+    # Check if we can achieve better accuracy by
+    # Putting A on the upper side and B on the lower
     upside_down = false
     if (len(Data) - len(max_mis_calc)) < len(min_mis_calc):
         upside_down = true
