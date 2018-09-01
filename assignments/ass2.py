@@ -1,3 +1,8 @@
+"""
+Problem statement can be found in *Pattern Recognition Assignment 2.pdf*
+in the same folder.
+"""
+
 from math import inf
 from queue import PriorityQueue
 
