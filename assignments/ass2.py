@@ -77,7 +77,8 @@ def get_lines_by_sorting(points):
             if slop == current_slop:
                 line.append(point)
             else:
-                if len(line) > 2:
+                line = [cling] + line
+                if len(line) > 2 and sorted(line) == line:
                     lines.append([cling] + line)
                 line = [point]
                 current_slop = slop
@@ -106,26 +107,15 @@ def get_lines_by_backtracking(points):
                             if p0.slope_to(p3) != -inf and p1.slope_to(p3) != -inf and p2.slope_to(p3) != -inf:
                                 line = [p0, p1, p2, p3]
                                 if is_line(line):
-                                    lines.append(line)
+                                    sorted_line = sorted(line)
+                                    if sorted_line == line:
+                                        lines.append(sorted_line)
+                                        # print(sorted_line)
     return lines
 
 
-def remove_subsets(lines):
-    length = len(lines)
-    lines = [sorted(line) for line in lines]
-    mask = [true] * length
-
-    for i in range(length):
-        if mask[i]:
-            for j in range(i + 1, length):
-                if lines[i][-4:] == lines[j][-4:]:
-                    mask[j] = false
-    new_list = [lines[i] for i, m in enumerate(mask) if m]
-    return new_list
-
-
 def main():
-    with open('../input/assignment2/input8.txt') as file:
+    with open('../input/assignment2/input6.txt') as file:
         n = int(file.readline())
         points = []
         for i in range(n):
@@ -133,7 +123,6 @@ def main():
             points.append(Point(x, y))
 
     lines = get_lines_by_sorting(points)
-    lines = remove_subsets(lines)
 
     for point in points:
         point.draw(show_text=true, offset=(300, -100))
