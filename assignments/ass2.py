@@ -79,7 +79,7 @@ def get_lines_by_sorting(points):
             else:
                 line = [cling] + line
                 if len(line) > 2 and sorted(line) == line:
-                    lines.append([cling] + line)
+                    lines.append(line)
                 line = [point]
                 current_slop = slop
 
@@ -115,7 +115,7 @@ def get_lines_by_backtracking(points):
 
 
 def main():
-    with open('../input/assignment2/input6.txt') as file:
+    with open('../input/assignment2/input3.txt') as file:
         n = int(file.readline())
         points = []
         for i in range(n):
@@ -125,7 +125,7 @@ def main():
     lines = get_lines_by_sorting(points)
 
     for point in points:
-        point.draw(show_text=true, offset=(300, -100))
+        point.draw(show_text=true, offset=(100, -500))
 
     for line in lines:
         for i, point in enumerate(line):
