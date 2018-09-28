@@ -1,5 +1,5 @@
 """
-Problem statement can be found in *Pattern Recognition Assignment 2.pdf*
+Problem statement can be found in *line-finding-problem-description.pdf*
 in the same folder.
 """
 
