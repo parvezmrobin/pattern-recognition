@@ -1,32 +1,35 @@
+"""
+Naive Bayes classification using histogram
+"""
+
 A = [
-    0.80, 0.91, 0.93, 0.95, 1.32, 1.53, 1.57, 1.63, 1.67, 1.74,
-    2.01, 2.18, 2.27, 2.31, 2.40, 2.61, 2.64, 2.64, 2.67, 2.85,
-    2.96, 2.97, 3.17, 3.17, 3.38, 3.67, 3.73, 3.83, 3.99, 4.06,
-    4.10, 4.12, 4.18, 4.20, 4.23, 4.27, 4.27, 4.39, 4.40, 4.46,
-    4.47, 4.61, 4.64, 4.89, 4.96, 5.12, 5.15, 5.33, 5.33, 5.47,
-    5.64, 5.85, 5.99, 6.29, 6.42, 6.53, 6.70, 6.78, 7.18, 7.22
+    21.5473, 27.0135, 29.8611, 35.4697, 36.8878, 38.0212, 39.4082, 41.1395, 45.5574, 49.0956, 51.6582,
+    52.6409, 53.0567, 53.1624, 53.4761, 55.8833, 57.1591, 63.8259, 64.2501, 65.4979, 65.7157, 69.4580,
+    81.0208, 81.5276, 84.7873, 85.7744, 89.0037, 91.1380, 91.4641, 93.8168, 93.9471, 96.0843, 96.0848,
+    100.0858, 105.1627, 108.3613, 110.8800, 117.6647, 117.9848, 118.4360, 121.2917, 125.8570, 128.0077,
+    129.2932, 135.8174, 139.2352, 140.8043, 141.4214, 144.7079, 144.7667
 ]
 
 B = [
-    3.54, 3.88, 4.24, 4.30, 4.30, 4.70, 4.75, 4.97, 5.21, 5.42,
-    5.60, 5.77, 5.87, 5.94, 5.95, 6.04, 6.05, 6.15, 6.19, 6.21,
-    6.33, 6.41, 6.43, 6.49, 6.52, 6.58, 6.60, 6.63, 6.65, 6.75,
-    6.90, 6.92, 7.03, 7.08, 7.18, 7.29, 7.33, 7.41, 7.41, 7.46,
-    7.61, 7.67, 7.68, 7.68, 7.78, 7.96, 8.03, 8.12, 8.20, 8.22,
-    8.33, 8.36, 8.44, 8.45, 8.49, 8.75, 8.76, 9.14, 9.20, 9.86
+    25.6024, 34.8757, 35.1628, 35.8968, 35.9767, 38.8649, 41.0315, 42.6889, 43.8441, 43.9201, 44.8091,
+    46.0837, 46.5343, 48.6401, 48.9080, 54.7670, 56.1891, 56.1938, 58.7832, 59.1863, 59.2944, 65.4580,
+    70.6238, 76.9717, 77.2350, 81.0838, 82.5482, 83.5704, 91.7224, 93.7093, 94.9845, 96.4818, 100.3616,
+    103.2577, 105.8672, 110.0303, 114.5979, 122.2597, 125.7384, 128.2570, 129.0089, 131.2494, 132.3562,
+    135.8940, 137.9303, 138.0080, 143.3842, 143.7339, 150.0468, 154.4975
 ]
 
-query_val = 7.5
+A = sorted(A)
+B = sorted(B)
 
-BIN_SIZE = 1
+BIN_SIZE = 10
 TOTAL_SAMPLE = len(A) + len(B)
-minimum, maximum = 0, 10
+minimum, maximum = 20, 160
 
-bin_A = [0] * 10
-bin_B = [0] * 10
+bin_A = [0] * 14
+bin_B = [0] * 14
 
 bin_i = 0
-bin_max = 1
+bin_max = minimum + BIN_SIZE
 for a in A:
     if a >= bin_max:
         bin_max += BIN_SIZE
@@ -34,23 +37,29 @@ for a in A:
     bin_A[bin_i] += 1
 
 bin_i = 0
-bin_max = 1
+bin_max = minimum + BIN_SIZE
 for b in B:
     if b >= bin_max:
         bin_max += BIN_SIZE
         bin_i += 1
     bin_B[bin_i] += 1
 
-query_bin = int((query_val - minimum) / BIN_SIZE)
-p_query_given_A = bin_A[query_bin] / (len(A) * BIN_SIZE)
-p_query_given_B = bin_B[query_bin] / (len(B) * BIN_SIZE)
-p_A = len(A) / TOTAL_SAMPLE
-p_B = len(B) / TOTAL_SAMPLE
+for query_val in [55, 101, 136]:
+    query_bin = int((query_val - minimum) / BIN_SIZE)
+    p_query_given_A = bin_A[query_bin] / (len(A) * BIN_SIZE)
+    p_query_given_B = bin_B[query_bin] / (len(B) * BIN_SIZE)
+    p_A = len(A) / TOTAL_SAMPLE
+    p_B = len(B) / TOTAL_SAMPLE
 
-p_query_and_A = p_query_given_A * p_A
-p_query_and_B = p_query_given_B * p_B
+    p_query_and_A = p_query_given_A * p_A
+    p_query_and_B = p_query_given_B * p_B
 
-p_A_given_query = p_query_and_A / (p_query_and_A + p_query_and_B)
-p_B_given_query = 1 - p_A_given_query
+    p_A_given_query = p_query_and_A / (p_query_and_A + p_query_and_B)
+    p_B_given_query = 1 - p_A_given_query
 
-print("Probality of {} belongs to A is {}.".format(query_val, p_A_given_query))
+    if p_A_given_query > p_B_given_query:
+        print("Probability of {} belongs to A is {:.2f}.".format(query_val, p_A_given_query))
+    elif p_A_given_query < p_B_given_query:
+        print("Probability of {} belongs to B is {:.2f}.".format(query_val, p_B_given_query))
+    else:
+        print("Probability of {} belonging to each class is same.".format(query_val))
