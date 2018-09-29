@@ -37,8 +37,8 @@ def get_near_most_clusters(distances):
     return c1, c2
 
 
-def distance_update(distances, i, j, algorithm='SingleLinkage'):
-    if algorithm not in ['SingleLinkage']:
+def distance_update(distances, i, j, linkage='single'):
+    if linkage not in ['single', 'complete', 'average']:
         raise RuntimeError("Invalid algorithm!")
     n = len(distances)
     i, j = sorted([i, j])
@@ -49,15 +49,23 @@ def distance_update(distances, i, j, algorithm='SingleLinkage'):
             adv = 1
             continue
         if k == i:  # row for first cluster will be combined with row for second cluster
-            if algorithm is 'SingleLinkage':
+            if linkage is 'single':
                 new_distances[k] = [min(distances[i][l], distances[j][l]) for l in range(k)]
+            elif linkage is 'complete':
+                new_distances[k] = [max(distances[i][l], distances[j][l]) for l in range(k)]
+            elif linkage is 'average':
+                new_distances[k] = [sum([distances[i][l], distances[j][l]]) / 2 for l in range(k)]
             continue
         new_distances[k - adv] = []
         for l in range(k):
             if l == i:
                 distance = nan
-                if algorithm is 'SingleLinkage':
+                if linkage is 'single':
                     distance = min(distances[k][i], distances[k][j])
+                elif linkage is 'complete':
+                    distance = max(distances[k][i], distances[k][j])
+                elif linkage is 'average':
+                    distance = sum([distances[k][i], distances[k][j]]) / 2
                 new_distances[k - adv].append(distance)
                 continue
             if l == j:
@@ -99,7 +107,7 @@ def main():
         i1, i2 = get_near_most_clusters(distances)
         c1 = clusters.pop(i1)
         clusters[i2] += c1
-        distances = distance_update(distances, i1, i2)
+        distances = distance_update(distances, i1, i2, linkage='average')
 
 
 main()
