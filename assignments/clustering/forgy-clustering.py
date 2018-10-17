@@ -44,15 +44,19 @@ def get_new_centroids(centroids, nearest_centroids, features):
 
 def main():
     features = [
-        (4, 4),
-        (8, 4),
-        (15, 8),
-        (24, 4),
-        (24, 12),
+        (2, 2),
+        (3, 3),
+        (3, 4),
+        (4.5, 5),
+        (6, 6),
+        (6, 8),
+        (7, 9),
+        (8, 8),
+        (9, 10),
     ]
     n = len(features)
-    k = 2
-    centroids = features[:k]
+    k = 3
+    centroids = [(2, 2), (6, 6), (8, 8)]
     nearest_centroids = [-1] * n
     while true:
         centroid_changed = false
@@ -61,14 +65,15 @@ def main():
             if nearest_centroid != nearest_centroids[i]:
                 centroid_changed = true
                 nearest_centroids[i] = nearest_centroid
-        print_cluster(centroids, features, n, nearest_centroids)
+        print_cluster(centroids, features, nearest_centroids)
         if centroid_changed:
             centroids = get_new_centroids(centroids, nearest_centroids, features)
         else:
             break
 
 
-def print_cluster(centroids, features, n, nearest_centroids):
+def print_cluster(centroids, features, nearest_centroids):
+    n = len(features)
     print(Fore.BLUE + "Centroids: " + Fore.RESET)
     for i in range(n):
         print(features[i], centroids[nearest_centroids[i]])

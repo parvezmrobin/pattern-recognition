@@ -36,13 +36,17 @@ def update_centroid(cluster):
 
 def main():
     features = [
-        (8, 4),
-        (24, 4),
-        (15, 8),
-        (4, 4),
-        (24, 12),
+        (2, 2),
+        (6, 6),
+        (8, 8),
+        (3, 3),
+        (3, 4),
+        (4.5, 5),
+        (6, 8),
+        (7, 9),
+        (9, 10)
     ]
-    k = 2
+    k = 3
     centroids = features[:k]
     clusters = [[features[i]] for i in range(k)]
 

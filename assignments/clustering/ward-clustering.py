@@ -83,17 +83,21 @@ def print_cluster(clusters):
 
 def main():
     features = [
-        (4, 4),
-        (8, 4),
-        (15, 8),
-        (24, 4),
-        (24, 12),
+        (2, 2),
+        (3, 3),
+        (3, 4),
+        (4.5, 5),
+        (6, 6),
+        (6, 8),
+        (7, 9),
+        (8, 8),
+        (9, 10)
     ]
     n = len(features)
     clusters = [[i] for i in range(n)]
 
     for i in range(n - 1):
-        i1, i2 = get_near_most_clusters(clusters, features, log=true)
+        i1, i2 = get_near_most_clusters(clusters, features)
         c2 = clusters.pop(i2)
         clusters[i1] += c2
         print_cluster(clusters)
